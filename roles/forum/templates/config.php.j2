@@ -1,0 +1,24 @@
+<?php
+
+$db_type = 'mysqli';
+$db_host = 'localhost';
+$db_name = 'forum';
+$db_username = 'forum';
+$db_password = '{{ mariadb_users.forum }}';
+$db_prefix = '{{ forum_db_prefix }}';
+$p_connect = false;
+
+$cookie_name = '{{ forum_cookie_name }}';
+$cookie_domain = '';
+$cookie_path = '/';
+$cookie_secure = 0;
+$cookie_seed = '{{ forum_cookie_seed }}';
+
+$arch_home = 'http://forum.archlinux.org.pl';
+
+$funnyquestion_hash = '{{ forum_funnyquestion_hash }}';
+foreach (array(1, 224, 256, 384, 512) as $hash) {
+        $funny_questions['Jaki jest wynik polecenia "date -u +%V$(uname)|sha'.$hash.'sum|sed \'s/\W//g\'"?'] = hash('sha'.$hash, gmdate('W').php_uname('s')."\n");
+}
+
+define('PUN', 1);

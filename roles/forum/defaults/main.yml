@@ -1,0 +1,8 @@
+---
+forum_domain: forum.archlinux.org.pl
+forum_dir: /srv/http/forum
+
+forum_funnyquestion_hash: eivuk5ma2eeZ2Ahy
+forum_cookie_name: bbspl_cookie_phaew6ph
+forum_cookie_seed: adurahc2ohR7quet
+forum_db_prefix: ''

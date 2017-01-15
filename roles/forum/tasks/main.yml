@@ -1,0 +1,55 @@
+---
+- name: create user
+  user: >
+    name=php-forum home="{{ forum_dir }}"
+    shell=/bin/false system=yes createhome=no
+
+- name: clone fluxbb
+  git: repo=git://github.com/archlinuxpl/fluxbb.git dest="{{ forum_dir }}"
+
+- name: fix home permissions
+  file: >
+    state=directory owner=php-forum group=php-forum recurse=yes
+    path="{{ forum_dir }}"
+  changed_when: False
+
+- name: create mariadb database
+  mysql_db: name=forum state=present
+
+- name: create mariadb user
+  mysql_user: >
+    user=forum host=localhost password={{ mariadb_users.forum }}
+    priv='forum.*:ALL'
+
+- name: create nginx log directory
+  file: path=/var/log/nginx/forum owner=root group=root mode=0644
+
+- name: configure nginx
+  template: >
+    src=nginx.conf.j2 dest=/etc/nginx/nginx.d/forum.conf
+    owner=root group=root mode=0644
+  notify: restart nginx
+
+- name: install python2-passlib
+  pacman: name=python2-passlib
+
+- name: create auth file
+  htpasswd: >
+    path=/etc/nginx/auth/forum
+    name={{ forum_htpasswd.username }}
+    password={{ forum_htpasswd.password }}
+    owner=root group=http mode=0640
+
+- name: install forum config
+  template: >
+    src=config.php.j2 dest=/srv/http/forum/config.php
+    owner=php-forum group=php-forum mode=400
+
+- name: configure php-fpm
+  template: >
+    src=php-fpm.conf.j2 dest=/etc/php/php-fpm.d/forum.conf
+    owner=root group=root mode=0644
+  notify: restart php-fpm@forum
+
+- name: start and enable systemd socket
+  service: name=php-fpm@forum.socket state=running enabled=true

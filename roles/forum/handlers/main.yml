@@ -1,0 +1,3 @@
+---
+- name: restart php-fpm@forum
+  systemd: name=php-fpm@forum.service state=restarted
