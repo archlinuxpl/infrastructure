@@ -1,0 +1,10 @@
+---
+- hosts: vinet
+  remote_user: root
+  roles:
+    - { role: common, tags: ['common'] }
+    - { role: sshd, tags: ['sshd'] }
+    - { role: users, tags: ['users'] }
+    - { role: sudo, tags: ['sudo', 'users'] }
+    - { role: grsec, tags: ['grsec'] }
+    - { role: forum, tags: ['forum'] }
