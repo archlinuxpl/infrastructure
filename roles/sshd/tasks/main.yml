@@ -1,0 +1,31 @@
+---
+- name: install openssh
+  pacman: name=openssh state=present
+
+- name: configure sshd
+  template: >
+    src=sshd_config.j2
+    dest=/etc/ssh/sshd_config
+    owner=root group=root mode=0644
+  notify:
+    - restart sshd
+
+- name: set file permissions
+  file: path=/etc/ssh mode=0600
+
+- name: start and enable sshd
+  service: name=sshd enabled=yes state=started
+
+- name: add ssh_users group
+  group: name=ssh_users state=present system=yes
+
+- name: collect root ssh keys
+  set_fact: pubkey_list="{{ lookup('file', '../pubkeys/' + item) }}"
+  register: pubkeys
+  with_items: "{{ root_ssh_keys }}"
+
+- name: concatenate root ssh keys
+  set_fact: pubkey_string={{ pubkeys.results | map(attribute='ansible_facts.pubkey_list') | join('\n') }}
+
+- name: add authorized keys for root
+  authorized_key: user=root key="{{ pubkey_string }}" exclusive=yes

@@ -1,0 +1,14 @@
+---
+common_tools:
+  - facter
+  - htop
+  - lsof
+  - ncdu
+  - parallel
+  - ps_mem
+  - screen
+  - the_silver_searcher
+  - tig
+  - tmux
+  - vim
+  - zsh

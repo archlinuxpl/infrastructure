@@ -1,0 +1,23 @@
+---
+- name: install packages
+  pacman: name=linux-grsec,hidepid,paxd state=installed
+
+- name: restrict access to dmesg
+  sysctl:
+    name: kernel.dmesg_restrict
+    value: 1
+    state: present
+    reload: yes
+
+- name: restrict access to kernel pointers in /proc
+  sysctl:
+    name: kernel.kptr_restrict
+    value: 1
+    state: present
+    reload: yes
+
+- name: start hidepid and paxd
+  service: name={{ item }} state=started
+  with_items:
+    - hidepid
+    - paxd

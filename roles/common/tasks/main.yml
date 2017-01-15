@@ -1,0 +1,54 @@
+---
+- name: update pacman cache
+  pacman: update_cache=yes
+
+- name: start and enable timesyncd
+  service: name=systemd-timesyncd state=started enabled=yes
+  when: ansible_virtualization_type != 'systemd-nspawn'
+
+- name: install smartmontools
+  pacman: name=smartmontools state=present
+  when: facter_virtual == 'physical'
+
+- name: start and enable smartd
+  service: name=smartd enabled=yes state=started
+  ignore_errors: yes
+  when: facter_virtual == 'physical'
+  # Ignore errors due to https://github.com/ansible/ansible-modules-core/issues/3868
+
+- name: generate locales
+  locale_gen: name={{ item }} state=present
+  with_items:
+    - en_US.UTF-8
+
+- name: configure locales
+  template: >
+    src=locale.conf.j2
+    dest=/etc/locale.conf
+    owner=root group=root mode=0644
+
+- name: install common daemons
+  pacman: name={{ item }} state=present
+  with_items:
+    - mlocate
+    - opensmtpd
+    - uptimed
+    - vnstat
+
+- name: start and enable common daemons
+  service: name={{ item }} state=started enabled=yes
+  with_items:
+    - smtpd
+    - updatedb.timer
+    - uptimed
+    - vnstat
+
+- name: install checkservices
+  copy: >
+    src=checkservices dest=/usr/local/bin/checkservices
+    owner=root group=root mode=0755
+
+- name: install tools
+  pacman: name={{ item }} state=present
+  with_items: "{{ common_tools }}"
+  tags: ['common', 'tools']
