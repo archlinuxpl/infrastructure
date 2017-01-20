@@ -7,4 +7,7 @@
     - { role: users, tags: ['users'] }
     - { role: sudo, tags: ['sudo', 'users'] }
     - { role: grsec, tags: ['grsec'] }
+    - { role: nginx, tags: ['nginx'] }
+    - { role: mariadb, tags: ['mariadb'] }
+    - { role: php-fpm, tags: ['php-fpm'] }
     - { role: forum, tags: ['forum'] }
