@@ -17,7 +17,7 @@ $cookie_seed = '{{ forum_cookie_seed }}';
 $arch_home = 'http://forum.archlinux.org.pl';
 
 $funnyquestion_hash = '{{ forum_funnyquestion_hash }}';
-foreach (array(1, 224, 256, 384, 512) as $hash) {
+foreach (array(1, 256, 512) as $hash) {
         $funny_questions['Jaki jest wynik polecenia "date -u +%V$(uname)|sha'.$hash.'sum|sed \'s/\W//g\'"?'] = hash('sha'.$hash, gmdate('W').php_uname('s')."\n");
 }
 
