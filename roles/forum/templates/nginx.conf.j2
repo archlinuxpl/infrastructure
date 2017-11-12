@@ -1,8 +1,8 @@
 server {
     server_name  {{ forum_domain }};
 
-    access_log   /var/log/nginx/forum/access.log;
-    error_log    /var/log/nginx/forum/error.log;
+    access_log /var/log/nginx/forum/access.log.gz combined gzip flush=5m;
+    error_log  /var/log/nginx/forum/error.log;
 
     include snippets/letsencrypt.conf;
 
@@ -17,7 +17,7 @@ server {
     root /srv/http/forum;
     index index.php;
 
-    access_log /var/log/nginx/forum/access.log;
+    access_log /var/log/nginx/forum/access.log.gz combined gzip flush=5m;
     error_log /var/log/nginx/forum/error.log;
 
     ssl_certificate      /etc/letsencrypt/live/{{ forum_domain }}/fullchain.pem;
