@@ -52,4 +52,4 @@
   notify: restart php-fpm@forum
 
 - name: start and enable systemd socket
-  service: name=php-fpm@forum.socket state=running enabled=true
+  service: name=php-fpm@forum.socket state=started enabled=true
