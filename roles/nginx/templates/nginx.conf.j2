@@ -24,6 +24,8 @@ http {
     brotli on;
     brotli_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript;
 
+    add_header X-Clacks-Overhead "GNU Terry Pratchett";
+
     index  index.php index.html index.htm;
 
     access_log   /var/log/nginx/default/access.log;
